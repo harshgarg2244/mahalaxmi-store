@@ -1,5 +1,13 @@
 {
   "version": "7",
   "dialect": "postgresql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1790408306229,
+      "tag": "0000_grocery_store_schema",
+      "breakpoints": true
+    }
+  ]
 }
