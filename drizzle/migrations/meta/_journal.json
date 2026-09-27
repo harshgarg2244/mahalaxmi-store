@@ -15,6 +15,13 @@
       "when": 1790408629320,
       "tag": "0001_seed_catalog",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790505041955,
+      "tag": "0002_claim_owner",
+      "breakpoints": true
     }
   ]
 }
