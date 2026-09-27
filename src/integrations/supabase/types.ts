@@ -365,6 +365,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_owner: { Args: never; Returns: boolean }
       get_order_public: {
         Args: { p_code: string; p_phone: string }
         Returns: Json
