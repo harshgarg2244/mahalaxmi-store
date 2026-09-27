@@ -40,7 +40,7 @@ function Orders() {
         onSubmit={(e) => {
           e.preventDefault();
           const p = phone.replace(/\D/g, "").slice(-10);
-          if (!code.trim() || p.length !== 10) return toast.error("Enter order code and 10-digit phone.");
+          if (!code.trim() || p.length !== 10) { toast.error("Enter order code and 10-digit phone."); return; }
           nav({ to: "/order/$code", params: { code: code.trim().toUpperCase() }, search: { phone: p, new: undefined } });
         }}
       >

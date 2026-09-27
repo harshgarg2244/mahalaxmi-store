@@ -6,8 +6,8 @@ import { OrderView, type PublicOrder } from "@/components/store/OrderView";
 
 export const Route = createFileRoute("/order/$code")({
   validateSearch: (s: Record<string, unknown>) => ({
-    phone: typeof s.phone === "string" ? s.phone : String(s.phone ?? ""),
-    new: s.new === true || s.new === "true" ? true : undefined,
+    phone: typeof s['phone'] === "string" ? s['phone'] : String(s['phone'] ?? ""),
+    new: s['new'] === true || s['new'] === "true" ? true : undefined,
   }),
   head: ({ params }) => ({
     meta: [

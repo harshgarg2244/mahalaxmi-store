@@ -39,9 +39,9 @@ function Checkout() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const phone = f.phone.replace(/\D/g, "").slice(-10);
-    if (f.name.trim().length < 2) return toast.error("Please enter your name.");
-    if (phone.length !== 10) return toast.error("Please enter a valid 10-digit phone number.");
-    if (f.address.trim().length < 5) return toast.error("Please enter your full address.");
+    if (f.name.trim().length < 2) { toast.error("Please enter your name."); return; }
+    if (phone.length !== 10) { toast.error("Please enter a valid 10-digit phone number."); return; }
+    if (f.address.trim().length < 5) { toast.error("Please enter your full address."); return; }
     setBusy(true);
     const { data, error } = await supabase.rpc("place_order", {
       p_name: f.name.trim().slice(0, 100),
@@ -51,7 +51,7 @@ function Checkout() {
       p_items: cart.items.map((i) => ({ variant_id: i.variantId, quantity: i.qty })),
     });
     setBusy(false);
-    if (error || !data) return toast.error(error?.message ?? "Could not place order. Please try again.");
+    if (error || !data) { toast.error(error?.message ?? "Could not place order. Please try again."); return; }
     const code = (data as { order_code: string }).order_code;
     localStorage.setItem("mahalaxmi-last-order", JSON.stringify({ code, phone }));
     notify({ data: { code, phone } }).catch(() => {});
