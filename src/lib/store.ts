@@ -70,8 +70,8 @@ export const ORDER_STATUSES = [
   "Pending",
   "Confirmed",
   "Packed",
-  "Out for Delivery",
-  "Delivered",
+  "Ready for Pickup",
+  "Picked Up",
   "Cancelled",
 ] as const;
 

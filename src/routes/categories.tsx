@@ -9,6 +9,8 @@ export const Route = createFileRoute("/categories")({
       { name: "description", content: "Browse rice, daal, atta, masala, snacks, personal care, pooja items, stationery and more." },
       { property: "og:title", content: "All Categories — Mahalaxmi General Store" },
       { property: "og:description", content: "Everything a kirana store stocks, organised by category." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(categoriesQuery),

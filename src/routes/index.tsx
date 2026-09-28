@@ -1,16 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowRight, Clock, ShieldCheck, Truck } from "lucide-react";
+import { ArrowRight, Clock, MapPin, ShoppingBasket } from "lucide-react";
 import { categoriesQuery, productsQuery, productIcon } from "@/lib/store";
 import { ProductCard } from "@/components/store/ProductCard";
+import heroImage from "@/assets/kirana-counter.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Mahalaxmi General Store — Fresh Groceries Delivered" },
-      { name: "description", content: "Order daily groceries, daal, atta, masala and household essentials. Pay at counter or on delivery." },
-      { property: "og:title", content: "Mahalaxmi General Store — Fresh Groceries Delivered" },
-      { property: "og:description", content: "Order your daily groceries easily and pay when you receive your order." },
+      { title: "Mahalaxmi General Store — Order Ahead for Pickup" },
+      { name: "description", content: "Book daily groceries, daal, atta, masala and household essentials online, then collect and pay at the store." },
+      { property: "og:title", content: "Mahalaxmi General Store — Order Ahead for Pickup" },
+      { property: "og:description", content: "Book your groceries online and collect them from the store." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   loader: ({ context }) =>
@@ -30,20 +33,22 @@ function Home() {
 
   return (
     <div className="mx-auto max-w-6xl px-4">
-      <section className="mt-5 overflow-hidden rounded-3xl bg-primary p-6 text-primary-foreground sm:p-10">
-        <div className="max-w-2xl">
-          <span className="inline-block rounded-full bg-accent px-3 py-1 text-sm font-bold text-accent-foreground">
-            💵 Pay at Counter / On Delivery
+      <section className="relative mt-5 min-h-[440px] overflow-hidden rounded-lg bg-foreground text-primary-foreground sm:min-h-[500px]">
+        <img src={heroImage} alt="Grains, pulses and spices at Mahalaxmi General Store" width={1600} height={912} className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-r from-foreground/95 via-foreground/70 to-transparent" />
+        <div className="relative flex min-h-[440px] max-w-2xl flex-col justify-center p-6 sm:min-h-[500px] sm:p-10">
+          <span className="w-fit rounded-full bg-accent px-3 py-1 text-sm font-bold text-accent-foreground">
+            Order ahead · Pay at the counter
           </span>
           <h1 className="mt-4 text-3xl font-extrabold leading-tight sm:text-5xl">
-            Fresh Groceries. Everyday Essentials. Delivered to You.
+            Fresh groceries, packed and ready when you arrive.
           </h1>
           <p className="mt-3 text-base opacity-90 sm:text-lg">
-            Order your daily groceries easily and pay when you receive your order.
+            Book your everyday essentials online. We prepare the order for pickup at our store.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link to="/shop" search={{ q: "", cat: "" }} className="inline-flex items-center gap-2 rounded-xl bg-card px-5 py-3 font-bold text-foreground">
-              Shop Now <ArrowRight className="h-4 w-4" />
+              Start your order <ArrowRight className="h-4 w-4" />
             </Link>
             <Link to="/categories" className="rounded-xl border-2 border-primary-foreground/40 px-5 py-3 font-bold">
               Browse Categories
@@ -54,8 +59,8 @@ function Home() {
 
       <section className="mt-4 grid grid-cols-3 gap-2 text-center text-xs sm:text-sm">
         {[
-          { Icon: Truck, t: "Home delivery" },
-          { Icon: ShieldCheck, t: "No online payment" },
+          { Icon: ShoppingBasket, t: "Packed for pickup" },
+          { Icon: MapPin, t: "Collect at the store" },
           { Icon: Clock, t: "Open daily" },
         ].map(({ Icon, t }) => (
           <div key={t} className="flex flex-col items-center gap-1 rounded-2xl border bg-card p-3 sm:flex-row sm:justify-center">

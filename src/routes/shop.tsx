@@ -12,9 +12,11 @@ export const Route = createFileRoute("/shop")({
   head: () => ({
     meta: [
       { title: "Shop Groceries — Mahalaxmi General Store" },
-      { name: "description", content: "Browse and search all products with prices and sizes. Pay on delivery." },
+      { name: "description", content: "Browse products, choose sizes and book your groceries for store pickup." },
       { property: "og:title", content: "Shop Groceries — Mahalaxmi General Store" },
       { property: "og:description", content: "All products, all sizes, local prices." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   loader: ({ context }) =>

@@ -9,6 +9,8 @@ export const Route = createFileRoute("/cart")({
       { name: "description", content: "Review items in your cart before placing your order." },
       { property: "og:title", content: "Your Cart — Mahalaxmi General Store" },
       { property: "og:description", content: "Review your grocery order." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: CartPage,
@@ -57,11 +59,11 @@ function CartPage() {
         <div className="mt-3 space-y-1 text-sm">
           <div className="flex justify-between"><span>Items total</span><span>{inr(cart.subtotal)}</span></div>
           {savings > 0 && <div className="flex justify-between text-primary"><span>You save</span><span>{inr(savings)}</span></div>}
-          <div className="flex justify-between"><span>Delivery</span><span className="text-primary">Free</span></div>
+          <div className="flex justify-between"><span>Pickup</span><span className="text-primary">At the store</span></div>
           <div className="mt-2 flex justify-between border-t pt-2 text-base font-bold"><span>To pay</span><span>{inr(cart.subtotal)}</span></div>
         </div>
-        <p className="mt-3 rounded-lg bg-accent/40 p-2 text-center text-sm font-semibold">💵 Pay at Counter / On Delivery</p>
-        <Link to="/checkout" className="mt-3 block rounded-xl bg-primary py-3 text-center font-bold text-primary-foreground">Proceed to checkout</Link>
+        <p className="mt-3 rounded-lg bg-accent/40 p-2 text-center text-sm font-semibold">Pay at the counter when you collect</p>
+        <Link to="/checkout" className="mt-3 block rounded-xl bg-primary py-3 text-center font-bold text-primary-foreground">Book for pickup</Link>
       </aside>
     </div>
   );

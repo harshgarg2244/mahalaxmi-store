@@ -22,8 +22,7 @@ async function send(chatId: string, text: string) {
 }
 
 type PublicOrder = {
-  order_code: string; customer_name: string; customer_phone: string; address: string;
-  landmark: string | null; total: number;
+  order_code: string; customer_name: string; customer_phone: string; total: number;
   items: { product_name: string; variant_name: string; quantity: number; total_price: number }[];
 };
 
@@ -39,7 +38,7 @@ export const notifyNewOrder = createServerFn({ method: "POST" })
       const { data: s } = await sb.from("store_settings").select("telegram_chat_id").eq("id", 1).single();
       if (!s?.telegram_chat_id) return { ok: false };
       const lines = o.items.map((i) => `• ${i.product_name} (${i.variant_name}) × ${i.quantity} = ₹${i.total_price}`);
-      const text = `🛒 New order ${o.order_code}\n\n👤 ${o.customer_name}\n📞 ${o.customer_phone}\n📍 ${o.address}${o.landmark ? ` (near ${o.landmark})` : ""}\n\n${lines.join("\n")}\n\n💰 Total: ₹${o.total} — Cash on delivery`;
+      const text = `🛒 New pickup order ${o.order_code}\n\n👤 ${o.customer_name}\n📞 ${o.customer_phone}\n\n${lines.join("\n")}\n\n💰 Total: ₹${o.total} — Pay at counter`;
       return await send(s.telegram_chat_id, text);
     } catch (e) {
       console.error(e);
