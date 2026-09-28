@@ -12,7 +12,7 @@ export function fallbackProductImage(name: string, category?: string | null) {
   return grainImage;
 }
 
-export function ProductVisual({ src, name, category, className = "" }: { src?: string | null; name: string; category?: string | null; className?: string }) {
+export function ProductVisual({ src, name, category, className = "" }: { src?: string | null | undefined; name: string; category?: string | null | undefined; className?: string | undefined }) {
   return (
     <img
       src={src ?? fallbackProductImage(name, category)}
