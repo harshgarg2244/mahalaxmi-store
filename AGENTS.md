@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Customer orders are store-pickup bookings; keep legacy address columns only for backward database compatibility and never present delivery as available.
+- Owner tools live in a protected `/admin` workspace using browser database access under staff-only row policies, because management is interactive and RLS is authoritative.
