@@ -11,9 +11,11 @@ export const Route = createFileRoute("/checkout")({
   head: () => ({
     meta: [
       { title: "Checkout — Mahalaxmi General Store" },
-      { name: "description", content: "Enter your name, phone and address to place your order. Pay on delivery." },
+      { name: "description", content: "Enter your name and phone to book your grocery order for store pickup." },
       { property: "og:title", content: "Checkout — Mahalaxmi General Store" },
-      { property: "og:description", content: "Place your grocery order in seconds." },
+      { property: "og:description", content: "Book your grocery order for pickup in seconds." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Checkout,
@@ -24,7 +26,7 @@ function Checkout() {
   const nav = useNavigate();
   const qc = useQueryClient();
   const notify = useServerFn(notifyNewOrder);
-  const [f, setF] = useState({ name: "", phone: "", address: "", landmark: "" });
+  const [f, setF] = useState({ name: "", phone: "" });
   const [busy, setBusy] = useState(false);
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setF({ ...f, [k]: e.target.value });
 
@@ -41,13 +43,12 @@ function Checkout() {
     const phone = f.phone.replace(/\D/g, "").slice(-10);
     if (f.name.trim().length < 2) { toast.error("Please enter your name."); return; }
     if (phone.length !== 10) { toast.error("Please enter a valid 10-digit phone number."); return; }
-    if (f.address.trim().length < 5) { toast.error("Please enter your full address."); return; }
     setBusy(true);
     const { data, error } = await supabase.rpc("place_order", {
       p_name: f.name.trim().slice(0, 100),
       p_phone: phone,
-      p_address: f.address.trim().slice(0, 500),
-      p_landmark: f.landmark.trim().slice(0, 200),
+      p_address: "Store pickup",
+      p_landmark: "",
       p_items: cart.items.map((i) => ({ variant_id: i.variantId, quantity: i.qty })),
     });
     setBusy(false);
@@ -64,15 +65,13 @@ function Checkout() {
   return (
     <div className="mx-auto grid max-w-5xl gap-6 px-4 py-6 md:grid-cols-[1fr_320px]">
       <form onSubmit={submit} className="space-y-4 rounded-2xl border bg-card p-5">
-        <h1 className="text-2xl font-bold">Delivery details</h1>
-        <p className="text-sm text-muted-foreground">No account needed — just tell us where to deliver.</p>
+        <h1 className="text-2xl font-bold">Pickup details</h1>
+        <p className="text-sm text-muted-foreground">No account needed. We’ll use your number to confirm when the order is ready.</p>
         <label className="block text-sm font-medium">Full name<input className={input} value={f.name} onChange={set("name")} maxLength={100} required /></label>
         <label className="block text-sm font-medium">Phone number<input className={input} value={f.phone} onChange={set("phone")} inputMode="numeric" placeholder="10-digit mobile" maxLength={14} required /></label>
-        <label className="block text-sm font-medium">Address<textarea className={input} rows={3} value={f.address} onChange={set("address")} maxLength={500} required /></label>
-        <label className="block text-sm font-medium">Landmark (optional)<input className={input} value={f.landmark} onChange={set("landmark")} maxLength={200} /></label>
         <div className="rounded-xl border-2 border-primary bg-secondary p-3">
-          <p className="font-semibold">💵 Pay at Counter / On Delivery</p>
-          <p className="text-xs text-muted-foreground">Pay by cash or UPI when you receive your order. No online payment.</p>
+          <p className="font-semibold">Pickup and payment</p>
+          <p className="text-xs text-muted-foreground">Collect your packed order at the store and pay by cash or UPI at the counter.</p>
         </div>
         <button disabled={busy} className="w-full rounded-xl bg-primary py-3 font-bold text-primary-foreground disabled:opacity-60">
           {busy ? "Placing order…" : `Place order · ${inr(cart.subtotal)}`}

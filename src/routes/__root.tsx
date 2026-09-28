@@ -82,10 +82,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Mahalaxmi General Store — Groceries Delivered" },
-      { name: "description", content: "Order daily groceries and essentials from Mahalaxmi General Store. Pay on delivery." },
+      { title: "Mahalaxmi General Store — Order Ahead" },
+      { name: "description", content: "Book daily groceries and essentials online, then collect and pay at the store." },
       { property: "og:title", content: "Mahalaxmi General Store" },
-      { property: "og:description", content: "Order daily groceries and essentials. Pay on delivery." },
+      { property: "og:description", content: "Book groceries online for quick store pickup." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

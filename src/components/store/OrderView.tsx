@@ -8,7 +8,7 @@ export type PublicOrder = {
   items: { product_name: string; brand: string | null; variant_name: string; quantity: number; unit_price: number; total_price: number }[];
 };
 
-const STEPS = ["Pending", "Confirmed", "Packed", "Out for Delivery", "Delivered"];
+const STEPS = ["Pending", "Confirmed", "Packed", "Ready for Pickup", "Picked Up"];
 
 export function OrderView({ o }: { o: PublicOrder }) {
   const idx = STEPS.indexOf(o.status);
@@ -37,9 +37,9 @@ export function OrderView({ o }: { o: PublicOrder }) {
         )}
       </div>
       <div className="rounded-2xl border bg-card p-4 text-sm">
-        <p className="font-semibold">Delivering to</p>
+        <p className="font-semibold">Pickup contact</p>
         <p>{o.customer_name} · {o.customer_phone}</p>
-        <p className="text-muted-foreground">{o.address}{o.landmark ? `, near ${o.landmark}` : ""}</p>
+        <p className="text-muted-foreground">Collect from the store after the status changes to Ready for Pickup.</p>
       </div>
       <div className="rounded-2xl border bg-card p-4 text-sm">
         <ul className="space-y-2">
@@ -51,7 +51,7 @@ export function OrderView({ o }: { o: PublicOrder }) {
           ))}
         </ul>
         <div className="mt-3 flex justify-between border-t pt-2 text-base font-bold"><span>Total</span><span>{inr(o.total)}</span></div>
-        <p className="mt-2 text-center font-semibold">💵 Pay at Counter / On Delivery</p>
+        <p className="mt-2 text-center font-semibold">Pay at the counter on pickup</p>
       </div>
     </div>
   );

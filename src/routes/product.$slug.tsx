@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { categoriesQuery, productsQuery, productIcon } from "@/lib/store";
 import { useCart, inr } from "@/lib/cart";
 import { ProductCard, QtyControl } from "@/components/store/ProductCard";
+import { ProductVisual } from "@/components/store/ProductVisual";
 
 export const Route = createFileRoute("/product/$slug")({
   loader: async ({ context, params }) => {
@@ -18,8 +19,8 @@ export const Route = createFileRoute("/product/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [{ title: "Product not found" }, { name: "robots", content: "noindex" }] };
     const t = `${loaderData.name} — Mahalaxmi General Store`;
-    const d = `Buy ${loaderData.name}${loaderData.brand ? ` by ${loaderData.brand}` : ""}. Pay on delivery.`;
-    return { meta: [{ title: t }, { name: "description", content: d }, { property: "og:title", content: t }, { property: "og:description", content: d }, { property: "og:type", content: "product" }] };
+    const d = `Book ${loaderData.name}${loaderData.brand ? ` by ${loaderData.brand}` : ""} for store pickup.`;
+    return { meta: [{ title: t }, { name: "description", content: d }, { property: "og:title", content: t }, { property: "og:description", content: d }, { property: "og:type", content: "product" }, { name: "twitter:card", content: "summary" }] };
   },
   notFoundComponent: () => (
     <div className="p-10 text-center">Product not found. <Link to="/shop" search={{ q: "", cat: "" }} className="text-primary">Back to shop</Link></div>
@@ -33,7 +34,8 @@ function ProductPage() {
   const { data: cats } = useSuspenseQuery(categoriesQuery);
   const { data: products } = useSuspenseQuery(productsQuery);
   const cart = useCart();
-  const p = products.find((x) => x.slug === slug)!;
+  const p = products.find((x) => x.slug === slug);
+  if (!p) return null;
   const icon = productIcon(p, cats);
   const variants = p.product_variants.filter((v) => v.is_available);
   const [vid, setVid] = useState(variants[0]?.id);
@@ -46,8 +48,8 @@ function ProductPage() {
         <ChevronLeft className="h-4 w-4" /> {p.categories?.name ?? "Shop"}
       </Link>
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="flex aspect-square items-center justify-center rounded-3xl bg-secondary text-[8rem]">
-          {p.image_url ? <img src={p.image_url} alt={p.name} className="h-full w-full rounded-3xl object-cover" /> : icon}
+        <div className="aspect-square overflow-hidden rounded-lg bg-secondary">
+          <ProductVisual src={p.image_url} name={p.name} category={p.categories?.name} className="h-full w-full object-cover" />
         </div>
         <div>
           {p.brand && <p className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">{p.brand}</p>}
@@ -84,7 +86,7 @@ function ProductPage() {
                 }} />
                 {cart.qtyOf(v.id) > 0 && <Link to="/cart" className="text-sm font-semibold text-primary">Go to cart →</Link>}
               </div>
-              <p className="mt-4 text-sm text-muted-foreground">💵 Pay at Counter / On Delivery</p>
+               <p className="mt-4 text-sm text-muted-foreground">Book now and pay at the counter on pickup.</p>
             </div>
           )}
         </div>

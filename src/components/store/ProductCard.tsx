@@ -3,6 +3,8 @@ import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import { useCart, inr } from "@/lib/cart";
 import type { Product } from "@/lib/store";
+import { ProductVisual } from "@/components/store/ProductVisual";
+import { Button } from "@/components/ui/button";
 
 export function QtyControl({ variantId, onAdd, disabled }: { variantId: string; onAdd: () => void; disabled?: boolean }) {
   const cart = useCart();
@@ -12,19 +14,22 @@ export function QtyControl({ variantId, onAdd, disabled }: { variantId: string; 
   }
   if (q === 0) {
     return (
-      <button
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
         onClick={onAdd}
-        className="rounded-lg border-2 border-primary bg-secondary px-4 py-1 text-sm font-bold text-primary transition hover:bg-primary hover:text-primary-foreground"
+        className="border-2 border-primary bg-secondary font-bold text-primary hover:bg-primary hover:text-primary-foreground"
       >
         ADD
-      </button>
+      </Button>
     );
   }
   return (
     <div className="flex items-center gap-2 rounded-lg bg-primary px-1.5 py-1 text-primary-foreground">
-      <button aria-label="Decrease" onClick={() => cart.setQty(variantId, q - 1)} className="p-0.5"><Minus className="h-4 w-4" /></button>
+      <Button type="button" variant="ghost" size="icon" aria-label="Decrease" onClick={() => cart.setQty(variantId, q - 1)} className="h-6 w-6 text-primary-foreground hover:bg-primary-foreground/15 hover:text-primary-foreground"><Minus className="h-4 w-4" /></Button>
       <span className="min-w-4 text-center text-sm font-bold">{q}</span>
-      <button aria-label="Increase" onClick={() => cart.setQty(variantId, q + 1)} className="p-0.5"><Plus className="h-4 w-4" /></button>
+      <Button type="button" variant="ghost" size="icon" aria-label="Increase" onClick={() => cart.setQty(variantId, q + 1)} className="h-6 w-6 text-primary-foreground hover:bg-primary-foreground/15 hover:text-primary-foreground"><Plus className="h-4 w-4" /></Button>
     </div>
   );
 }
@@ -38,15 +43,15 @@ export function ProductCard({ product, icon }: { product: Product; icon: string 
   const off = v.mrp && v.mrp > v.price ? Math.round(((v.mrp - v.price) / v.mrp) * 100) : 0;
 
   return (
-    <div className="relative flex flex-col rounded-2xl border bg-card p-3 shadow-sm transition hover:shadow-md">
+    <article className="relative flex flex-col rounded-lg border bg-card p-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
       {off > 0 && (
         <span className="absolute left-2 top-2 z-10 rounded-md bg-accent px-1.5 py-0.5 text-[10px] font-bold text-accent-foreground">
           {off}% OFF
         </span>
       )}
       <Link to="/product/$slug" params={{ slug: product.slug }} className="block">
-        <div className="mb-2 flex aspect-square items-center justify-center rounded-xl bg-secondary text-5xl">
-          {product.image_url ? <img src={product.image_url} alt={product.name} className="h-full w-full rounded-xl object-cover" /> : icon}
+        <div className="mb-3 aspect-square overflow-hidden rounded-md bg-secondary">
+          <ProductVisual src={product.image_url} name={product.name} category={product.categories?.name} className="h-full w-full object-cover transition duration-300 hover:scale-105" />
         </div>
         {product.brand && <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{product.brand}</p>}
         <h3 className="line-clamp-2 min-h-10 text-sm font-semibold leading-tight">{product.name}</h3>
@@ -68,7 +73,7 @@ export function ProductCard({ product, icon }: { product: Product; icon: string 
       <div className="mt-auto flex items-center justify-between pt-3">
         <div>
           <p className="text-sm font-bold">{inr(v.price)}</p>
-          {off > 0 && <p className="text-[11px] text-muted-foreground line-through">{inr(v.mrp!)}</p>}
+           {off > 0 && v.mrp !== null && <p className="text-[11px] text-muted-foreground line-through">{inr(v.mrp)}</p>}
         </div>
         <QtyControl
           variantId={v.id}
@@ -89,6 +94,6 @@ export function ProductCard({ product, icon }: { product: Product; icon: string 
           }
         />
       </div>
-    </div>
+    </article>
   );
 }

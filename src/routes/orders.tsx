@@ -9,6 +9,8 @@ export const Route = createFileRoute("/orders")({
       { name: "description", content: "Enter your order code and phone number to see your order status." },
       { property: "og:title", content: "Track Your Order — Mahalaxmi General Store" },
       { property: "og:description", content: "Check your grocery order status anytime." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Orders,

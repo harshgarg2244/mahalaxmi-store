@@ -15,6 +15,8 @@ export const Route = createFileRoute("/order/$code")({
       { name: "description", content: "Track the status of your grocery order." },
       { property: "og:title", content: "Track your order — Mahalaxmi General Store" },
       { property: "og:description", content: "See your order status and items." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -40,7 +42,7 @@ function OrderPage() {
         <div className="mb-4 rounded-2xl bg-primary p-5 text-center text-primary-foreground">
           <CheckCircle2 className="mx-auto h-12 w-12" />
           <h1 className="mt-2 text-2xl font-bold">Order placed!</h1>
-          <p className="opacity-90">Thank you. We'll confirm your order shortly. Save your order code to track it.</p>
+           <p className="opacity-90">We’ll confirm it shortly and let you know when it is ready to collect. Save your order code.</p>
         </div>
       )}
       {isLoading ? (
