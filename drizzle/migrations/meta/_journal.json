@@ -29,6 +29,13 @@
       "when": 1790581472818,
       "tag": "0003_convert_orders_to_store_pickup",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791802365372,
+      "tag": "0004_migration",
+      "breakpoints": true
     }
   ]
 }
