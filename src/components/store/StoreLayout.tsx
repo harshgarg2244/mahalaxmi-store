@@ -67,7 +67,8 @@ export function StoreLayout({ children }: { children: ReactNode }) {
           </div>
           <div><p className="font-semibold text-foreground">Hours</p><p>{s?.opening_hours}</p></div>
           <div><p className="font-semibold text-foreground">Call / WhatsApp</p><p>{s?.phone}</p>
-            </div>
+            <Link to="/auth" className="mt-2 inline-block text-xs underline hover:text-foreground">Owner login</Link>
+          </div>
         </div>
       </footer>
 
