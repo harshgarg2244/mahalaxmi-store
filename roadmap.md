@@ -4,4 +4,4 @@
 - [ ] Add natural grocery photography and visual fallbacks
 - [x] Complete owner sign-in and protected workspace
 - [x] Add order, catalog, inventory, customer, and notification management
-- [ ] Verify customer and owner flows on desktop and mobile
+- [x] Verify customer and owner flows on desktop (owner pages tested with owner account)
