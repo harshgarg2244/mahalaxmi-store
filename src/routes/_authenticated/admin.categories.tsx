@@ -74,7 +74,7 @@ function Categories() {
 function CatRow({ c, onSave }: { c: { id: string; name: string; icon: string | null; is_active: boolean }; onSave: (id: string, p: { name?: string; icon?: string; is_active?: boolean }) => void }) {
   return (
     <div className="flex items-center gap-2 py-1 text-sm">
-      <input defaultValue={c.icon ?? ""} className={`${field} w-14 text-center`} onBlur={(e) => e.target.value !== (c.icon ?? "") && onSave(c.id, { icon: e.target.value })} />
+      <input defaultValue={c.icon ?? ""} className={`${fieldSm} w-14 text-center`} onBlur={(e) => e.target.value !== (c.icon ?? "") && onSave(c.id, { icon: e.target.value })} />
       <input defaultValue={c.name} className={field} onBlur={(e) => e.target.value.trim() && e.target.value !== c.name && onSave(c.id, { name: e.target.value.trim() })} />
       <label className="flex shrink-0 items-center gap-1 text-xs"><input type="checkbox" checked={c.is_active} onChange={(e) => onSave(c.id, { is_active: e.target.checked })} />Visible</label>
     </div>
