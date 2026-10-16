@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { PageTitle, Panel, adminMeta, field, btn, btnGhost } from "@/components/admin/kit";
+import { PageTitle, Panel, adminMeta, field, fieldSm, btn, btnGhost } from "@/components/admin/kit";
 
 export const Route = createFileRoute("/_authenticated/admin/products")({
   head: () => adminMeta("Products", "Add and edit products, sizes, prices and visibility."),
@@ -121,16 +121,16 @@ function Products() {
               {p.product_variants.map((v) => (
                 <div key={v.id} className="mt-1 flex flex-wrap items-center gap-2 pl-4 text-xs">
                   <span className="w-24">{v.variant_name}</span>
-                  ₹<input type="number" min={0} defaultValue={v.price} className={`${field} w-20`} onBlur={(e) => Number(e.target.value) !== v.price && upd("product_variants", v.id, { price: Number(e.target.value) })} />
-                  MRP ₹<input type="number" min={0} defaultValue={v.mrp ?? ""} className={`${field} w-20`} onBlur={(e) => Number(e.target.value) !== (v.mrp ?? 0) && upd("product_variants", v.id, { mrp: e.target.value ? Number(e.target.value) : null })} />
+                  ₹<input type="number" min={0} defaultValue={v.price} className={`${fieldSm} w-20`} onBlur={(e) => Number(e.target.value) !== v.price && upd("product_variants", v.id, { price: Number(e.target.value) })} />
+                  MRP ₹<input type="number" min={0} defaultValue={v.mrp ?? ""} className={`${fieldSm} w-20`} onBlur={(e) => Number(e.target.value) !== (v.mrp ?? 0) && upd("product_variants", v.id, { mrp: e.target.value ? Number(e.target.value) : null })} />
                   <span className="text-muted-foreground">Stock {v.stock_quantity}</span>
                 </div>
               ))}
               <form className="mt-2 flex flex-wrap items-center gap-2 pl-4 text-xs" onSubmit={(e) => { e.preventDefault(); addVariant(p.id, e.currentTarget); }}>
-                <input name="name" className={`${field} w-24`} placeholder="New size" />
-                <input name="price" type="number" min={0} step="0.01" className={`${field} w-20`} placeholder="Price" />
-                <input name="mrp" type="number" min={0} step="0.01" className={`${field} w-20`} placeholder="MRP" />
-                <input name="stock" type="number" min={0} className={`${field} w-20`} placeholder="Stock" />
+                <input name="name" className={`${fieldSm} w-24`} placeholder="New size" />
+                <input name="price" type="number" min={0} step="0.01" className={`${fieldSm} w-20`} placeholder="Price" />
+                <input name="mrp" type="number" min={0} step="0.01" className={`${fieldSm} w-20`} placeholder="MRP" />
+                <input name="stock" type="number" min={0} className={`${fieldSm} w-20`} placeholder="Stock" />
                 <button className={btnGhost}><Plus className="h-3 w-3" />Add size</button>
               </form>
             </li>
