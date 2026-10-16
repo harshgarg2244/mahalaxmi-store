@@ -49,7 +49,7 @@ function Inventory() {
               <span className="min-w-0 flex-1 truncate">{r.products?.name} <span className="text-muted-foreground">({r.variant_name})</span></span>
               <label className="flex items-center gap-1 text-xs"><input type="checkbox" checked={r.is_available} onChange={(e) => save(r.id, { is_available: e.target.checked })} />On sale</label>
               <input type="number" min={0} defaultValue={r.stock_quantity} key={r.stock_quantity}
-                className={`${field} w-20 ${r.stock_quantity < 5 ? "border-destructive" : ""}`}
+                className={`${fieldSm} w-20 shrink-0 ${r.stock_quantity < 5 ? "border-destructive" : ""}`}
                 onBlur={(e) => { const n = Math.max(0, parseInt(e.target.value) || 0); if (n !== r.stock_quantity) save(r.id, { stock_quantity: n }); }} />
             </li>
           ))}
