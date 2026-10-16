@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { PageTitle, Panel, adminMeta, field } from "@/components/admin/kit";
+import { PageTitle, Panel, adminMeta, field, fieldSm } from "@/components/admin/kit";
 
 export const Route = createFileRoute("/_authenticated/admin/inventory")({
   head: () => adminMeta("Stock", "Update stock counts for every product size."),
