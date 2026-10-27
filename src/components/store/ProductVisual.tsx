@@ -32,10 +32,10 @@ const rules: Array<[string[], string]> = [
   [["masala", "spice", "mdh", "everest", "turmeric", "haldi", "jeera", "cumin", "coriander", "chilli", "pepper"], masalaImage],
   [["noodle", "maggi", "instant", "pasta", "vermicelli"], noodlesImage],
   [["toothpaste", "colgate", "pepsodent", "oral", "toothbrush"], toothpasteImage],
-  [["milk", "dairy", "amul taaza", "curd", "dahi", "paneer", "butter", "cheese", "bread", "bakery", "kellogg", "corn flakes", "oats"], milkImage],
+  [["chocolate", "cadbury", "nestle", "toffee", "candy", "kitkat", "oreo"], chocolateImage],
+  [["milk", "amul taaza", "curd", "dahi", "paneer", "butter", "cheese", "bread", "bakery", "kellogg", "corn flakes", "oats", "cerelac"], milkImage],
   [["namkeen", "bhujia", "haldiram", "bikaji", "chips", "lay", "kurkure", "snack", "papad", "lijjat"], namkeenImage],
   [["shampoo", "hair", "clinic", "parachute", "conditioner"], shampooImage],
-  [["chocolate", "cadbury", "nestle", "toffee", "candy", "kitkat"], chocolateImage],
   [["dal", "daal", "pulse", "rajma", "chana", "moong", "toor", "urad", "sampann", "lentil"], daalImage],
 ];
 
