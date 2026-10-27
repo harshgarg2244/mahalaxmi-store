@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { PageTitle, Panel, adminMeta, btn, field } from "@/components/admin/kit";
+import { PageTitle, Panel, adminMeta, btn, field, fieldSm } from "@/components/admin/kit";
 
 export const Route = createFileRoute("/_authenticated/admin/categories")({
   head: () => adminMeta("Categories", "Add, rename and hide store categories."),
