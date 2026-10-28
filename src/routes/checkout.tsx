@@ -26,7 +26,7 @@ function Checkout() {
   const nav = useNavigate();
   const qc = useQueryClient();
   const notify = useServerFn(notifyNewOrder);
-  const [f, setF] = useState({ name: "", phone: "" });
+  const [f, setF] = useState({ name: "", phone: "", whatsapp: "", address: "", landmark: "" });
   const [busy, setBusy] = useState(false);
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setF({ ...f, [k]: e.target.value });
 
@@ -41,14 +41,18 @@ function Checkout() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const phone = f.phone.replace(/\D/g, "").slice(-10);
+    const whatsapp = f.whatsapp.replace(/\D/g, "").slice(-10);
     if (f.name.trim().length < 2) { toast.error("Please enter your name."); return; }
     if (phone.length !== 10) { toast.error("Please enter a valid 10-digit phone number."); return; }
+    if (f.whatsapp.trim() !== "" && whatsapp.length !== 10) { toast.error("Please enter a valid 10-digit WhatsApp number, or leave it empty."); return; }
+    if (f.address.trim().length < 5) { toast.error("Please enter your address."); return; }
     setBusy(true);
     const { data, error } = await supabase.rpc("place_order", {
       p_name: f.name.trim().slice(0, 100),
       p_phone: phone,
-      p_address: "Store pickup",
-      p_landmark: "",
+      p_address: f.address.trim().slice(0, 300),
+      p_landmark: f.landmark.trim().slice(0, 120),
+      p_whatsapp: whatsapp.length === 10 ? whatsapp : null,
       p_items: cart.items.map((i) => ({ variant_id: i.variantId, quantity: i.qty })),
     });
     setBusy(false);
@@ -69,6 +73,15 @@ function Checkout() {
         <p className="text-sm text-muted-foreground">No account needed. We’ll use your number to confirm when the order is ready.</p>
         <label className="block text-sm font-medium">Full name<input className={input} value={f.name} onChange={set("name")} maxLength={100} required /></label>
         <label className="block text-sm font-medium">Phone number<input className={input} value={f.phone} onChange={set("phone")} inputMode="numeric" placeholder="10-digit mobile" maxLength={14} required /></label>
+        <label className="block text-sm font-medium">
+          WhatsApp number <span className="text-xs text-muted-foreground">(optional)</span>
+          <input className={input} value={f.whatsapp} onChange={set("whatsapp")} inputMode="numeric" placeholder="Same as phone if left empty" maxLength={14} />
+        </label>
+        <label className="block text-sm font-medium">Address<textarea className={input} rows={2} value={f.address} onChange={set("address")} placeholder="House / street / area" maxLength={300} required /></label>
+        <label className="block text-sm font-medium">
+          Landmark <span className="text-xs text-muted-foreground">(optional)</span>
+          <input className={input} value={f.landmark} onChange={set("landmark")} maxLength={120} placeholder="Nearby shop, temple, etc." />
+        </label>
         <div className="rounded-xl border-2 border-primary bg-secondary p-3">
           <p className="font-semibold">Pickup and payment</p>
           <p className="text-xs text-muted-foreground">Collect your packed order at the store and pay by cash or UPI at the counter.</p>

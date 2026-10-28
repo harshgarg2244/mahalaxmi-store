@@ -2,7 +2,7 @@ import { Check } from "lucide-react";
 import { inr } from "@/lib/cart";
 
 export type PublicOrder = {
-  order_code: string; customer_name: string; customer_phone: string; address: string;
+  order_code: string; customer_name: string; customer_phone: string; whatsapp?: string; address: string;
   landmark: string | null; subtotal: number; discount: number; total: number;
   payment_method: string; status: string; created_at: string;
   items: { product_name: string; brand: string | null; variant_name: string; quantity: number; unit_price: number; total_price: number }[];
@@ -38,7 +38,7 @@ export function OrderView({ o }: { o: PublicOrder }) {
       </div>
       <div className="rounded-2xl border bg-card p-4 text-sm">
         <p className="font-semibold">Pickup contact</p>
-        <p>{o.customer_name} · {o.customer_phone}</p>
+        <p>{o.customer_name} · {o.customer_phone}{o.whatsapp && o.whatsapp !== o.customer_phone ? ` · WhatsApp: ${o.whatsapp}` : ""}</p>
         <p className="text-muted-foreground">Collect from the store after the status changes to Ready for Pickup.</p>
       </div>
       <div className="rounded-2xl border bg-card p-4 text-sm">

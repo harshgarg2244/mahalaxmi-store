@@ -69,6 +69,7 @@ export type Database = {
           landmark: string | null
           name: string
           phone: string
+          whatsapp: string | null
         }
         Insert: {
           address: string
@@ -77,6 +78,7 @@ export type Database = {
           landmark?: string | null
           name: string
           phone: string
+          whatsapp?: string | null
         }
         Update: {
           address?: string
@@ -85,6 +87,7 @@ export type Database = {
           landmark?: string | null
           name?: string
           phone?: string
+          whatsapp?: string | null
         }
         Relationships: []
       }
@@ -145,6 +148,7 @@ export type Database = {
           customer_id: string | null
           customer_name: string
           customer_phone: string
+          customer_whatsapp: string | null
           discount: number
           id: string
           landmark: string | null
@@ -162,6 +166,7 @@ export type Database = {
           customer_id?: string | null
           customer_name: string
           customer_phone: string
+          customer_whatsapp?: string | null
           discount?: number
           id?: string
           landmark?: string | null
@@ -179,6 +184,7 @@ export type Database = {
           customer_id?: string | null
           customer_name?: string
           customer_phone?: string
+          customer_whatsapp?: string | null
           discount?: number
           id?: string
           landmark?: string | null
@@ -378,16 +384,28 @@ export type Database = {
         Returns: boolean
       }
       is_staff: { Args: never; Returns: boolean }
-      place_order: {
-        Args: {
-          p_address: string
-          p_items: Json
-          p_landmark: string
-          p_name: string
-          p_phone: string
-        }
-        Returns: Json
-      }
+      place_order:
+        | {
+            Args: {
+              p_address: string
+              p_items: Json
+              p_landmark: string
+              p_name: string
+              p_phone: string
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              p_address: string
+              p_items: Json
+              p_landmark: string
+              p_name: string
+              p_phone: string
+              p_whatsapp?: string
+            }
+            Returns: Json
+          }
     }
     Enums: {
       app_role: "admin" | "staff"
