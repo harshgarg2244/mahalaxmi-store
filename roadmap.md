@@ -5,3 +5,5 @@
 - [x] Complete owner sign-in and protected workspace
 - [x] Add order, catalog, inventory, customer, and notification management
 - [x] Verify customer and owner flows on desktop (owner pages tested with owner account)
+- [x] Customers page: expandable per-customer order history with statuses
+- [x] Checkout collects name, phone, WhatsApp, address and landmark

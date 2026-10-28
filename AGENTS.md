@@ -9,5 +9,5 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 
-- Customer orders are store-pickup bookings; keep legacy address columns only for backward database compatibility and never present delivery as available.
+- Customer orders are store-pickup bookings; checkout must collect name, phone, WhatsApp (optional, defaults to phone), address and landmark as contact details — never present delivery as available.
 - Owner tools live in a protected `/admin` workspace using browser database access under staff-only row policies, because management is interactive and RLS is authoritative.
