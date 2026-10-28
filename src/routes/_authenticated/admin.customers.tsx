@@ -75,7 +75,7 @@ function Customers() {
                           {c.phone}
                           {c.whatsapp !== c.phone ? ` · WhatsApp ${c.whatsapp}` : ""}
                           {" · last order "}
-                          {new Date(c.orders[0].created_at).toLocaleDateString("en-IN")}
+                          {c.orders[0] ? new Date(c.orders[0].created_at).toLocaleDateString("en-IN") : ""}
                         </p>
                       </div>
                     </div>
