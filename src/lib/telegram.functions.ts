@@ -10,23 +10,19 @@ function publicClient() {
 }
 
 async function send(chatId: string, text: string) {
-  const conn = process.env["TELEGRAM_API_KEY"];
-  const lovableKey = process.env["LOVABLE_API_KEY"];
   const token = process.env["TELEGRAM_BOT_TOKEN"];
-  let res: Response;
-  if (conn && lovableKey) {
-    res = await fetch("https://connector-gateway.lovable.dev/telegram/sendMessage", {
-      method: "POST",
-      headers: { "content-type": "application/json", Authorization: `Bearer ${lovableKey}`, "X-Connection-Api-Key": conn },
-      body: JSON.stringify({ chat_id: chatId, text }),
-    });
-  } else if (token) {
-    res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ chat_id: chatId, text }),
-    });
-  } else return { ok: false, error: "Telegram is not connected yet." };
+  if (!token) {
+    return {
+      ok: false,
+      error:
+        "Telegram is not set up yet. Create a bot with @BotFather and set TELEGRAM_BOT_TOKEN in your server environment.",
+    };
+  }
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ chat_id: chatId, text }),
+  });
   const body = (await res.json()) as { ok: boolean; description?: string };
   return body.ok ? { ok: true } : { ok: false, error: body.description ?? "Telegram error" };
 }
