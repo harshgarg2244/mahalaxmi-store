@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { Store } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,9 +8,10 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Owner Sign In — Mahalaxmi General Store" },
-      { name: "description", content: "Store owner sign in to manage pickup orders, products and stock." },
-      { property: "og:title", content: "Owner Sign In — Mahalaxmi General Store" },
-      { property: "og:description", content: "Manage pickup orders, products and stock." },
+      {
+        name: "description",
+        content: "Authorized store owner sign in.",
+      },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -19,42 +20,119 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const nav = useNavigate();
-  const [mode, setMode] = useState<"in" | "up">("in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
-  async function submit(e: React.FormEvent) {
+  async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (busy) return;
+
     setBusy(true);
-    const { data, error } =
-      mode === "in"
-        ? await supabase.auth.signInWithPassword({ email, password })
-        : await supabase.auth.signUp({ email, password, options: { emailRedirectTo: `${window.location.origin}/auth` } });
-    setBusy(false);
-    if (error) { toast.error(error.message); return; }
-    if (!data.session) { toast.success("Check your email to confirm your account, then sign in."); setMode("in"); return; }
-    await supabase.rpc("claim_owner");
-    nav({ to: "/admin" });
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim().toLowerCase(),
+        password,
+      });
+
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+
+      if (!data.session) {
+        toast.error("Unable to establish a login session.");
+        return;
+      }
+
+      const { data: isOwner, error: ownerError } =
+        await supabase.rpc("claim_owner");
+
+      if (ownerError || isOwner !== true) {
+        await supabase.auth.signOut();
+        toast.error("This account is not authorized to access the owner dashboard.");
+        return;
+      }
+
+      toast.success("Welcome to Mahalaxmi Store!");
+      await nav({ to: "/admin" });
+    } catch {
+      await supabase.auth.signOut();
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setBusy(false);
+    }
   }
 
-  const input = "w-full rounded-xl border bg-card px-3 py-2.5 text-sm outline-none focus:border-primary";
+  const input =
+    "w-full rounded-xl border bg-card px-3 py-2.5 text-sm outline-none focus:border-primary";
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted px-4">
-      <form onSubmit={submit} className="w-full max-w-sm space-y-4 rounded-2xl border bg-card p-6 shadow-sm">
+      <form
+        onSubmit={submit}
+        className="w-full max-w-sm space-y-4 rounded-2xl border bg-card p-6 shadow-sm"
+      >
         <div className="flex items-center gap-2">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground"><Store className="h-5 w-5" /></span>
-          <div><h1 className="font-display text-lg font-bold">Owner {mode === "in" ? "sign in" : "sign up"}</h1>
-            <p className="text-xs text-muted-foreground">Mahalaxmi General Store</p></div>
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+            <Store className="h-5 w-5" />
+          </span>
+
+          <div>
+            <h1 className="font-display text-lg font-bold">
+              Owner Sign In
+            </h1>
+            <p className="text-xs text-muted-foreground">
+              Mahalaxmi General Store
+            </p>
+          </div>
         </div>
-        <input className={input} type="email" required placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input className={input} type="password" required minLength={6} placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button disabled={busy} className="w-full rounded-xl bg-primary py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-60">
-          {busy ? "Please wait…" : mode === "in" ? "Sign in" : "Create owner account"}
+
+        <div className="space-y-1">
+          <label htmlFor="owner-email" className="text-sm font-medium">
+            Owner Email
+          </label>
+          <input
+            id="owner-email"
+            className={input}
+            type="email"
+            autoComplete="username"
+            required
+            placeholder="Enter owner email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label htmlFor="owner-password" className="text-sm font-medium">
+            Password
+          </label>
+          <input
+            id="owner-password"
+            className={input}
+            type="password"
+            autoComplete="current-password"
+            required
+            placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={busy}
+          className="w-full rounded-xl bg-primary py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-60"
+        >
+          {busy ? "Please wait..." : "Sign In"}
         </button>
-        <button type="button" onClick={() => setMode(mode === "in" ? "up" : "in")} className="w-full text-xs text-muted-foreground underline">
-          {mode === "in" ? "First time? Create the owner account" : "Already have an account? Sign in"}
-        </button>
+
+        <p className="text-center text-xs text-muted-foreground">
+          Authorized store owners only.
+        </p>
       </form>
     </div>
   );
