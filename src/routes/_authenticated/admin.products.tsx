@@ -42,6 +42,12 @@ function Products() {
     if (error) { toast.error(error.message); return; }
     toast.success("Saved"); refresh();
   }
+  async function delVariant(v: V) {
+    if (!window.confirm(`Remove size "${v.variant_name}" from this product? Past orders are not affected.`)) return;
+    const { error } = await supabase.from("product_variants").delete().eq("id", v.id);
+    if (error) { toast.error(error.message); return; }
+    toast.success("Size removed"); refresh();
+  }
   async function addVariant(productId: string, f: HTMLFormElement) {
     const d = new FormData(f);
     const name = String(d.get("name") ?? "").trim();
@@ -124,6 +130,7 @@ function Products() {
                   ₹<input type="number" min={0} defaultValue={v.price} className={`${fieldSm} w-20`} onBlur={(e) => Number(e.target.value) !== v.price && upd("product_variants", v.id, { price: Number(e.target.value) })} />
                   MRP ₹<input type="number" min={0} defaultValue={v.mrp ?? ""} className={`${fieldSm} w-20`} onBlur={(e) => Number(e.target.value) !== (v.mrp ?? 0) && upd("product_variants", v.id, { mrp: e.target.value ? Number(e.target.value) : null })} />
                   <span className="text-muted-foreground">Stock {v.stock_quantity}</span>
+                  <button type="button" onClick={() => delVariant(v)} title="Remove this size" className="ml-1 rounded px-1.5 py-0.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive">✕</button>
                 </div>
               ))}
               <form className="mt-2 flex flex-wrap items-center gap-2 pl-4 text-xs" onSubmit={(e) => { e.preventDefault(); addVariant(p.id, e.currentTarget); }}>
