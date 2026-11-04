@@ -23,7 +23,7 @@ function Products() {
   const { data = [] } = useQuery({
     queryKey: ["admin-products"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("products").select("id,name,brand,is_active,is_featured,product_variants(id,variant_name,price,mrp,stock_quantity)").order("name");
+      const { data, error } = await supabase.from("products").select("id,name,brand,is_active,is_featured,image_url,product_variants(id,variant_name,price,mrp,stock_quantity)").order("name");
       if (error) throw error;
       return data as unknown as P[];
     },
