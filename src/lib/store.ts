@@ -72,8 +72,17 @@ export const ORDER_STATUSES = [
   "Packed",
   "Ready for Pickup",
   "Picked Up",
+  "Paid in Cash",
+  "Paid by UPI",
   "Cancelled",
 ] as const;
+
+/** Statuses set after pickup records how the customer paid at the counter. */
+export const PAID_STATUSES = ["Paid in Cash", "Paid by UPI"] as const;
+
+export function isPaidStatus(status: string) {
+  return (PAID_STATUSES as readonly string[]).includes(status);
+}
 
 export function waLink(phone: string, text: string) {
   const digits = phone.replace(/\D/g, "");

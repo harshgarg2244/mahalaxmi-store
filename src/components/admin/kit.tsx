@@ -32,6 +32,7 @@ export function StatusBadge({ status }: { status: string }) {
   const tone =
     status === "Pending" ? "bg-accent text-accent-foreground"
     : status === "Cancelled" ? "bg-destructive/15 text-destructive"
+    : isPaidStatus(status) ? "bg-primary text-primary-foreground"
     : status === "Picked Up" ? "bg-muted text-muted-foreground"
     : "bg-primary/15 text-primary";
   return <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${tone}`}>{status}</span>;
