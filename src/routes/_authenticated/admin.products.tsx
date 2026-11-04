@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_authenticated/admin/products")({
 });
 
 type V = { id: string; variant_name: string; price: number; mrp: number | null; stock_quantity: number };
-type P = { id: string; name: string; brand: string | null; is_active: boolean; is_featured: boolean; product_variants: V[] };
+type P = { id: string; name: string; brand: string | null; is_active: boolean; is_featured: boolean; image_url: string | null; product_variants: V[] };
 
 const slugify = (s: string) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "-" + Math.random().toString(36).slice(2, 6);
 
