@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_authenticated/admin/products")({
 });
 
 type V = { id: string; variant_name: string; price: number; mrp: number | null; stock_quantity: number };
-type P = { id: string; name: string; brand: string | null; is_active: boolean; is_featured: boolean; product_variants: V[] };
+type P = { id: string; name: string; brand: string | null; is_active: boolean; is_featured: boolean; image_url: string | null; product_variants: V[] };
 
 const slugify = (s: string) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "-" + Math.random().toString(36).slice(2, 6);
 
@@ -23,7 +23,7 @@ function Products() {
   const { data = [] } = useQuery({
     queryKey: ["admin-products"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("products").select("id,name,brand,is_active,is_featured,product_variants(id,variant_name,price,mrp,stock_quantity)").order("name");
+      const { data, error } = await supabase.from("products").select("id,name,brand,is_active,is_featured,image_url,product_variants(id,variant_name,price,mrp,stock_quantity)").order("name");
       if (error) throw error;
       return data as unknown as P[];
     },
@@ -41,6 +41,12 @@ function Products() {
     const { error } = await supabase.from(table).update(patch as never).eq("id", id);
     if (error) { toast.error(error.message); return; }
     toast.success("Saved"); refresh();
+  }
+  async function delVariant(v: V) {
+    if (!window.confirm(`Remove size "${v.variant_name}" from this product? Past orders are not affected.`)) return;
+    const { error } = await supabase.from("product_variants").delete().eq("id", v.id);
+    if (error) { toast.error(error.message); return; }
+    toast.success("Size removed"); refresh();
   }
   async function addVariant(productId: string, f: HTMLFormElement) {
     const d = new FormData(f);
@@ -118,12 +124,25 @@ function Products() {
                 <label className="flex items-center gap-1 text-xs"><input type="checkbox" checked={p.is_active} onChange={(e) => upd("products", p.id, { is_active: e.target.checked })} />Visible</label>
                 <label className="flex items-center gap-1 text-xs"><input type="checkbox" checked={p.is_featured} onChange={(e) => upd("products", p.id, { is_featured: e.target.checked })} />Featured</label>
               </div>
+              <div className="flex items-center gap-2 pl-4 text-xs text-muted-foreground">
+                <span className="shrink-0">Photo</span>
+                <input
+                  defaultValue={p.image_url ?? ""}
+                  placeholder="Photo link (leave empty to use the built-in pack photo)"
+                  className={`${fieldSm} max-w-md flex-1`}
+                  onBlur={(e) => {
+                    const val = e.target.value.trim();
+                    if (val !== (p.image_url ?? "")) upd("products", p.id, { image_url: val || null });
+                  }}
+                />
+              </div>
               {p.product_variants.map((v) => (
                 <div key={v.id} className="mt-1 flex flex-wrap items-center gap-2 pl-4 text-xs">
                   <span className="w-24">{v.variant_name}</span>
                   ₹<input type="number" min={0} defaultValue={v.price} className={`${fieldSm} w-20`} onBlur={(e) => Number(e.target.value) !== v.price && upd("product_variants", v.id, { price: Number(e.target.value) })} />
                   MRP ₹<input type="number" min={0} defaultValue={v.mrp ?? ""} className={`${fieldSm} w-20`} onBlur={(e) => Number(e.target.value) !== (v.mrp ?? 0) && upd("product_variants", v.id, { mrp: e.target.value ? Number(e.target.value) : null })} />
                   <span className="text-muted-foreground">Stock {v.stock_quantity}</span>
+                  <button type="button" onClick={() => delVariant(v)} title="Remove this size" className="ml-1 rounded px-1.5 py-0.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive">✕</button>
                 </div>
               ))}
               <form className="mt-2 flex flex-wrap items-center gap-2 pl-4 text-xs" onSubmit={(e) => { e.preventDefault(); addVariant(p.id, e.currentTarget); }}>
