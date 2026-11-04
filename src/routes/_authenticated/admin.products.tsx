@@ -124,9 +124,18 @@ function Products() {
                 <label className="flex items-center gap-1 text-xs"><input type="checkbox" checked={p.is_active} onChange={(e) => upd("products", p.id, { is_active: e.target.checked })} />Visible</label>
                 <label className="flex items-center gap-1 text-xs"><input type="checkbox" checked={p.is_featured} onChange={(e) => upd("products", p.id, { is_featured: e.target.checked })} />Featured</label>
               </div>
-              {p.product_variants.map((v) => (
-                <div key={v.id} className="mt-1 flex flex-wrap items-center gap-2 pl-4 text-xs">
-                  <span className="w-24">{v.variant_name}</span>
+              <div className="flex items-center gap-2 pl-4 text-xs text-muted-foreground">
+                <span className="shrink-0">Photo</span>
+                <input
+                  defaultValue={p.image_url ?? ""}
+                  placeholder="Photo link (leave empty to use the built-in pack photo)"
+                  className={`${fieldSm} max-w-md flex-1`}
+                  onBlur={(e) => {
+                    const val = e.target.value.trim();
+                    if (val !== (p.image_url ?? "")) upd("products", p.id, { image_url: val || null });
+                  }}
+                />
+              </div>
                   ₹<input type="number" min={0} defaultValue={v.price} className={`${fieldSm} w-20`} onBlur={(e) => Number(e.target.value) !== v.price && upd("product_variants", v.id, { price: Number(e.target.value) })} />
                   MRP ₹<input type="number" min={0} defaultValue={v.mrp ?? ""} className={`${fieldSm} w-20`} onBlur={(e) => Number(e.target.value) !== (v.mrp ?? 0) && upd("product_variants", v.id, { mrp: e.target.value ? Number(e.target.value) : null })} />
                   <span className="text-muted-foreground">Stock {v.stock_quantity}</span>
