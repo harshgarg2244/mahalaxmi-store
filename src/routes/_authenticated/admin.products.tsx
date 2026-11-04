@@ -136,6 +136,9 @@ function Products() {
                   }}
                 />
               </div>
+              {p.product_variants.map((v) => (
+                <div key={v.id} className="mt-1 flex flex-wrap items-center gap-2 pl-4 text-xs">
+                  <span className="w-24">{v.variant_name}</span>
                   ₹<input type="number" min={0} defaultValue={v.price} className={`${fieldSm} w-20`} onBlur={(e) => Number(e.target.value) !== v.price && upd("product_variants", v.id, { price: Number(e.target.value) })} />
                   MRP ₹<input type="number" min={0} defaultValue={v.mrp ?? ""} className={`${fieldSm} w-20`} onBlur={(e) => Number(e.target.value) !== (v.mrp ?? 0) && upd("product_variants", v.id, { mrp: e.target.value ? Number(e.target.value) : null })} />
                   <span className="text-muted-foreground">Stock {v.stock_quantity}</span>
