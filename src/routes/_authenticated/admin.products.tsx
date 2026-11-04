@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_authenticated/admin/products")({
 });
 
 type V = { id: string; variant_name: string; price: number; mrp: number | null; stock_quantity: number };
-type P = { id: string; name: string; brand: string | null; is_active: boolean; is_featured: boolean; product_variants: V[] };
+type P = { id: string; name: string; brand: string | null; is_active: boolean; is_featured: boolean; image_url: string | null; product_variants: V[] };
 
 const slugify = (s: string) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "-" + Math.random().toString(36).slice(2, 6);
 
@@ -23,7 +23,7 @@ function Products() {
   const { data = [] } = useQuery({
     queryKey: ["admin-products"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("products").select("id,name,brand,is_active,is_featured,product_variants(id,variant_name,price,mrp,stock_quantity)").order("name");
+      const { data, error } = await supabase.from("products").select("id,name,brand,is_active,is_featured,image_url,product_variants(id,variant_name,price,mrp,stock_quantity)").order("name");
       if (error) throw error;
       return data as unknown as P[];
     },
@@ -123,6 +123,18 @@ function Products() {
                 <span className="flex-1 font-semibold">{p.name}{p.brand && <span className="ml-1 font-normal text-muted-foreground">· {p.brand}</span>}</span>
                 <label className="flex items-center gap-1 text-xs"><input type="checkbox" checked={p.is_active} onChange={(e) => upd("products", p.id, { is_active: e.target.checked })} />Visible</label>
                 <label className="flex items-center gap-1 text-xs"><input type="checkbox" checked={p.is_featured} onChange={(e) => upd("products", p.id, { is_featured: e.target.checked })} />Featured</label>
+              </div>
+              <div className="flex items-center gap-2 pl-4 text-xs text-muted-foreground">
+                <span className="shrink-0">Photo</span>
+                <input
+                  defaultValue={p.image_url ?? ""}
+                  placeholder="Photo link (leave empty to use the built-in pack photo)"
+                  className={`${fieldSm} max-w-md flex-1`}
+                  onBlur={(e) => {
+                    const val = e.target.value.trim();
+                    if (val !== (p.image_url ?? "")) upd("products", p.id, { image_url: val || null });
+                  }}
+                />
               </div>
               {p.product_variants.map((v) => (
                 <div key={v.id} className="mt-1 flex flex-wrap items-center gap-2 pl-4 text-xs">
