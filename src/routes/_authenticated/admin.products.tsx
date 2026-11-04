@@ -42,6 +42,12 @@ function Products() {
     if (error) { toast.error(error.message); return; }
     toast.success("Saved"); refresh();
   }
+  async function delVariant(v: V) {
+    if (!window.confirm(`Remove size "${v.variant_name}" from this product? Past orders are not affected.`)) return;
+    const { error } = await supabase.from("product_variants").delete().eq("id", v.id);
+    if (error) { toast.error(error.message); return; }
+    toast.success("Size removed"); refresh();
+  }
   async function addVariant(productId: string, f: HTMLFormElement) {
     const d = new FormData(f);
     const name = String(d.get("name") ?? "").trim();
